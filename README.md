@@ -11,7 +11,7 @@ Enhanced edition builds on EchoPatch to give F.E.A.R., Extraction Point and Pers
 > Compatible with F.E.A.R. Ultimate Shooter Edition (Steam) and F.E.A.R. Platinum (GOG).  
 > All features are compatible with Extraction Point and Perseus Mandate.  
 >
-> **Download**: [EchoPatch.zip](https://github.com/pytlivyy/EchoPatch-Enhanced/releases/latest/download/EchoPatch.zip)
+> **Download**: [EchoPatch.zip](https://github.com/pytlivyy/EchoPatch-Enhanced/releases/latest/download/EchoPatch.zip)  
 > Extract the contents of the zip file into the game's folder, in the same directory as the `FEAR.exe` file.  
 > On first launch, EchoPatch will prompt to apply a [LAA patch](#laa-patcher) if needed to prevent loading issues.  
 > This prompt will not appear for the GOG version, as the LAA patch is already applied there.
