@@ -22,6 +22,19 @@ Modernizes F.E.A.R. and its expansions with HUD scaling, high-framerate optimiza
 > [!WARNING]
 > **Windows Defender Controlled Folder Access** (rare): If saves or settings are not persisting, Windows Defender may be blocking access to the save folder. Go to **Windows Defender > Controlled Folder Access > Add an allowed app** and add the game executable.
 
+### Data Mods
+> [!NOTE]
+> The releases include three arch00 files that add fixes, improvements and new features to the game's data. The game loads them through its `Default.archcfg`, so each game's file needs a one-time edit, shown below. Updates replace the archive files.
+>
+> | Game | Copy into | Add to `Default.archcfg` |
+> |---|---|---|
+> | F.E.A.R. | the game's folder | `EchoPatch.arch00` as the last line |
+> | Extraction Point | the `FEARXP` folder | `../EchoPatch.arch00`, then `EchoPatchXP.arch00`, just before the `Game` line |
+> | Perseus Mandate | the `FEARXP2` folder | `EchoPatchXP2.arch00` just before the `Game` line |
+>
+> Extraction Point uses the base game's `EchoPatch.arch00` through `../`, the same way it loads the base game's own archives, so only `EchoPatchXP.arch00` goes in the `FEARXP` folder.  
+> Placing the lines after the game's archives lets the fixes override the game's files, while loose files in the `Game` folder still override everything.
+
 ### Steam Deck/Linux Specific Instructions (Windows users can skip this)
 > [!WARNING]
 > On Steam Deck, change the controller configuration to `Gamepad With Joystick Trackpad` for controller support.
@@ -114,6 +127,18 @@ Addresses several weapon-related issues:
 - Weapon model position not updating correctly after reloading a save with the same weapon equipped.
 
 > **Note**: These issues were partially fixed in the Extraction Point and Perseus Mandate expansions.
+
+## Animation Data Fixes
+Fixes bugs in the game's weapon animations, shipped as data archives (see [Data Mods](#data-mods)):
+- Shotgun pump lagging behind the hand when cocking.
+- SMG not ejecting casings while aiming or on the first and last round of a burst, and ejecting extra casings during long bursts.
+- SMG delay before the first shot when crouched and aiming.
+- G2A2 ejecting one casing for a two-round burst.
+- Crouched reloads out of step with the standing ones (shotgun, G2A2, Type-7, VES advanced rifle), causing doubled or missing reload sounds.
+- Penetrator crouched reload sounds playing at the wrong time.
+- Laser carbine battery misaligned during reloads (Extraction Point and Perseus Mandate).
+
+> **Note**: Building from source packs the `data` folder into these archives automatically and requires Python 3 on the `PATH`.
 
 ## Controller Support
 
