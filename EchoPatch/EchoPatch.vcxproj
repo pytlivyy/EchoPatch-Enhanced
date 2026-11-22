@@ -233,4 +233,7 @@
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets" />
+  <Target Name="BuildArchives" AfterTargets="Build" Condition="Exists('$(SolutionDir)data')">
+    <Exec Command="for /d %%d in (&quot;$(SolutionDir)data\*&quot;) do python &quot;$(SolutionDir)tools\build_arch.py&quot; &quot;%%d&quot; &quot;$(OutDir)%%~nxd.arch00&quot; || exit /b 1" />
+  </Target>
 </Project>
