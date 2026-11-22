@@ -92,6 +92,16 @@ namespace EngineInterface
     // Model
     constexpr DWORD Model_GetNode = 0x2C;
     constexpr DWORD Model_GetNodeName = 0x30;
+    constexpr DWORD Model_GetCurAnim = 0x94;
+    constexpr DWORD Model_SetCurAnim = 0x98;
+    constexpr DWORD Model_ResetAnim = 0xA0;
+    constexpr DWORD Model_GetLooping = 0xA4;
+    constexpr DWORD Model_SetLooping = 0xA8;
+    constexpr DWORD Model_GetPlaying = 0xAC;
+    constexpr DWORD Model_SetPlaying = 0xB0;
+    constexpr DWORD Model_GetCurAnimLength = 0xB4;
+    constexpr DWORD Model_GetCurAnimTime = 0xB8;
+    constexpr DWORD Model_SetCurAnimTime = 0xBC;
 
     // Physics
     constexpr DWORD Physics_IsWorldObject = 0x04;

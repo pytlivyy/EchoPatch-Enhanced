@@ -645,6 +645,7 @@ static void ApplyWeaponFixesClientPatch()
     DWORD addr_PreviousWeapon = ScanModuleSignature(g_State.GameClient, "8D BE ?? 57 00 00 8B CF E8 ?? ?? ?? ?? 84 C0 74 1F 8B CE E8", "PreviousWeapon");
     DWORD addr_kAP_ACT_Fire_Id = ScanModuleSignature(g_State.GameClient, "84 C0 75 1E 6A 00 68 ?? 00 00 00 6A 00 8B CF", "kAP_ACT_Fire_Id");
     DWORD addr_CanFireWeapon = ScanModuleSignature(g_State.GameClient, "8B 51 2C 32 C0 F6 C6 04 74", "CanFireWeapon");
+    DWORD addr_SetWeaponModelAnimation = ScanModuleSignature(g_State.GameClient, "53 8B 5C 24 08 85 DB 56 8B F1 0F 84 ?? ?? ?? ?? 80 3B 00 0F 84 ?? ?? ?? ?? 8B 46 1C", "SetWeaponModelAnimation");
     addr_NextWeapon = MemoryHelper::ResolveRelativeAddress(addr_NextWeapon, 0xB);
     addr_PreviousWeapon = MemoryHelper::ResolveRelativeAddress(addr_PreviousWeapon, 0x14);
 
@@ -657,7 +658,8 @@ static void ApplyWeaponFixesClientPatch()
         addr_NextWeapon == 0 ||
         addr_PreviousWeapon == 0 ||
         addr_kAP_ACT_Fire_Id == 0 ||
-        addr_CanFireWeapon == 0) {
+        addr_CanFireWeapon == 0 ||
+        addr_SetWeaponModelAnimation == 0) {
         return;
     }
 
@@ -669,6 +671,7 @@ static void ApplyWeaponFixesClientPatch()
     HookHelper::ApplyHook((void*)addr_NextWeapon, &NextWeapon_Hook, (LPVOID*)&NextWeapon);
     HookHelper::ApplyHook((void*)addr_PreviousWeapon, &PreviousWeapon_Hook, (LPVOID*)&PreviousWeapon);
     HookHelper::ApplyHook((void*)addr_CanFireWeapon, &CanFireWeapon_Hook, (LPVOID*)&CanFireWeapon);
+    HookHelper::ApplyHook((void*)addr_SetWeaponModelAnimation, &SetWeaponModelAnimation_Hook, (LPVOID*)&SetWeaponModelAnimation);
 	AnimationClearLock = reinterpret_cast<decltype(AnimationClearLock)>(addr_AnimationClearLock);
     g_State.kAP_ACT_Fire_Id = MemoryHelper::ReadMemory<int>(addr_kAP_ACT_Fire_Id + 0x7);
 }
