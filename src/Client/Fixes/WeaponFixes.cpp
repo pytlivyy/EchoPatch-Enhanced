@@ -12,6 +12,7 @@ static bool fireAnimationInterceptionDisabled = false;
 static bool requestNextWeapon = false;
 static bool requestPreviousWeapon = false;
 static bool isFireHeldFromTurret = false;
+static DWORD* pWeaponAnimationChanged = nullptr;
 
 // ======================
 // WeaponFixes
@@ -32,7 +33,40 @@ static void __fastcall UpdateWeaponModel_Hook(DWORD* thisPtr, int)
 		g_State.isEnteringWorld = false;
 	}
 
+	pWeaponAnimationChanged = nullptr;
 	UpdateWeaponModel(thisPtr);
+
+	// The arms switched to the other posture's version of their animation and continued it, continue the weapon's from the same time instead of restarting it
+	DWORD client = EngineInterface::GetClient();
+	if (!pWeaponAnimationChanged || !client) return;
+
+	using namespace EngineInterface;
+	DWORD modelLT = Call<DWORD>(client, Slot::GetModelLT);
+	BYTE* upperContext = reinterpret_cast<BYTE*>(thisPtr[2]);
+	uint32_t time = 0;
+
+	// 'm_hObject' and the tracker of the upper body context
+	if (CallOffset<int>(modelLT, Model_GetCurAnimTime, *reinterpret_cast<DWORD*>(upperContext + 0xC), (uint32_t)upperContext[0x224], &time) != 0 || time == 0)
+		return;
+
+	// Right and left hand models
+	for (DWORD hObject : { pWeaponAnimationChanged[7], pWeaponAnimationChanged[53] })
+	{
+		uint32_t anim = 0, length = 0;
+		if (!hObject || CallOffset<int>(modelLT, Model_GetCurAnim, hObject, (uint32_t)0xFF, &anim) != 0)
+			continue;
+
+		// Restarted without interpolation, an interpolated animation starts over on the next update
+		bool looping = CallOffset<int>(modelLT, Model_GetLooping, hObject, (uint32_t)0xFF) == 86; // LT_YES
+		bool playing = CallOffset<int>(modelLT, Model_GetPlaying, hObject, (uint32_t)0xFF) == 86;
+		CallOffset<int>(modelLT, Model_SetCurAnim, hObject, (uint32_t)0xFF, anim, false);
+		CallOffset<int>(modelLT, Model_ResetAnim, hObject, (uint32_t)0xFF);
+		CallOffset<int>(modelLT, Model_SetLooping, hObject, (uint32_t)0xFF, looping);
+		CallOffset<int>(modelLT, Model_SetPlaying, hObject, (uint32_t)0xFF, playing);
+
+		if (CallOffset<int>(modelLT, Model_GetCurAnimLength, hObject, (uint32_t)0xFF, &length) == 0 && length != 0)
+			CallOffset<int>(modelLT, Model_SetCurAnimTime, hObject, (uint32_t)0xFF, looping ? time % length : (std::min)(time, length));
+	}
 }
 
 static void __fastcall SetAnimProp_Hook(DWORD* thisPtr, int, int eAnimPropGroup, int eAnimProp)
@@ -242,4 +276,23 @@ static bool __fastcall CanFireWeapon_Hook(int thisPtr, int)
 	}
 
 	return CanFireWeapon(thisPtr);
+}
+
+static void __fastcall SetWeaponModelAnimation_Hook(DWORD* thisPtr, int, const char* pszAnimationName)
+{
+	SetWeaponModelAnimation(thisPtr, pszAnimationName);
+	pWeaponAnimationChanged = thisPtr;
+
+	// Play reload animations once, some weapon models have a shorter one than the arms and restart it (SMG magazine pulled out again)
+	DWORD client = EngineInterface::GetClient();
+	if (!client || !pszAnimationName || !StrStrIA(pszAnimationName, "reload")) return;
+
+	DWORD modelLT = EngineInterface::Call<DWORD>(client, EngineInterface::Slot::GetModelLT);
+
+	// Right and left hand models, 'MAIN_TRACKER'
+	for (DWORD hObject : { thisPtr[7], thisPtr[53] })
+	{
+		if (hObject)
+			EngineInterface::CallOffset<int>(modelLT, EngineInterface::Model_SetLooping, hObject, (uint32_t)0xFF, false);
+	}
 }

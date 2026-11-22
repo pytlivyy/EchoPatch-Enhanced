@@ -45,6 +45,7 @@ void(__thiscall* NextWeapon)(DWORD*) = nullptr;
 void(__thiscall* PreviousWeapon)(DWORD*) = nullptr;
 unsigned __int8(__thiscall* GetWeaponSlot)(int, int) = nullptr;
 bool(__thiscall* CanFireWeapon)(int) = nullptr;
+void(__thiscall* SetWeaponModelAnimation)(DWORD*, const char*) = nullptr;
 
 // HighResolutionReflections
 bool(__thiscall* RenderTargetGroupFXCreateRenderTarget)(int, uint32_t) = nullptr;
