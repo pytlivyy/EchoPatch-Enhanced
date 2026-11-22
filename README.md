@@ -4,6 +4,8 @@
 
 Modernizes F.E.A.R. and its expansions with HUD scaling, high-framerate optimizations, controller support, and other quality-of-life enhancements. It aims to be as non-intrusive as possible, applying runtime patches only, with no gameplay changes by default.
 
+Enhanced edition builds on EchoPatch to give F.E.A.R., Extraction Point and Perseus Mandate an extra layer of polish, with more bug fixes and refinements while keeping the gameplay true to its original design.
+
 ## How to Install
 > [!NOTE]  
 > Compatible with F.E.A.R. Ultimate Shooter Edition (Steam) and F.E.A.R. Platinum (GOG).  
