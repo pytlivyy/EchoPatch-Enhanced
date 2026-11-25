@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="assets/EchoPatch_Logo.png" style="max-width:75%">
+  <img src="assets/EchoPatch_Enhanced_Logo.gif" style="max-width:75%">
 </p>
 
 Modernizes F.E.A.R. and its expansions with HUD scaling, high-framerate optimizations, controller support, and other quality-of-life enhancements. It aims to be as non-intrusive as possible, applying runtime patches only, with no gameplay changes by default.
